@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quickprompts — Sharp AI Prompts, Totally Free</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            base: '#090b14',
+            surface: '#111424',
+            card: '#161a2e',
+            borderSoft: '#272c4a',
+            accentIndigo: '#818cf8',
+            accentPurple: '#c084fc',
+            accentRose: '#f472b6',
+            accentSky: '#38bdf8'
+          },
+          boxShadow: {
+            softCard: '0 14px 36px rgba(0, 0, 0, 0.45)',
+            softGlow: '0 8px 28px rgba(129, 140, 248, 0.22)'
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #090b14;
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(99, 102, 241, 0.16), transparent 40%),
+        radial-gradient(circle at 85% 18%, rgba(192, 132, 252, 0.14), transparent 42%),
+        radial-gradient(circle at 50% 92%, rgba(244, 114, 182, 0.10), transparent 45%);
+      background-attachment: fixed;
+    }
+
+    .gradient-card {
+      background: linear-gradient(160deg, rgba(25, 30, 54, 0.92) 0%, rgba(17, 20, 36, 0.96) 100%);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.42);
+    }
+
+    .title-gradient {
+      background: linear-gradient(95deg, #38bdf8 0%, #818cf8 45%, #e879f9 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .heading-pop {
+      background: linear-gradient(90deg, #ffffff 0%, #c7d2fe 65%, #f5d0fe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  </style>
+</head>
+<body class="text-slate-200 min-h-screen antialiased selection:bg-indigo-500/30 selection:text-white">
+  <div class="max-w-6xl mx-auto px-4 py-8 md:py-10">
+    <!-- Header -->
+    <header class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 pb-7 border-b border-white/10">
+      <div>
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight">
+          <span class="title-gradient">Quickprompts</span>
+        </h1>
+        <p class="text-lg md:text-xl font-bold text-white mt-1.5 tracking-tight">
+          Sharp AI Prompts, but it's totally FREE
+        </p>
+        <p class="text-sm text-slate-400 mt-1.5 max-w-xl">
+          Type your messy thoughts in plain English and turn them into clear, spot-on prompts that any AI understands right away.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2.5 bg-surface/90 p-2.5 rounded-2xl border border-white/10 shadow-softCard">
+        <select id="modeSelect" class="bg-base text-xs text-slate-100 font-medium px-3 py-2.5 rounded-xl border border-borderSoft focus:outline-none focus:border-accentIndigo cursor-pointer">
+          <option value="local">⚡ Free Instant Mode (No Setup)</option>
+          <option value="backend">🌐 Server AI Mode</option>
+          <option value="gemini">✨ Use My Gemini API Key</option>
+        </select>
+        <input
+          id="apiKeyInput"
+          type="password"
+          placeholder="Paste Gemini API key..."
+          class="hidden bg-base text-xs text-slate-100 px-3 py-2.5 rounded-xl border border-borderSoft placeholder-slate-500 focus:outline-none focus:border-accentPurple w-48"
+        />
+        <a href="#preset-library" class="text-xs font-semibold px-3.5 py-2.5 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-200 border border-indigo-400/30 transition">
+          Ideas
+        </a>
+        <a href="#about-section" class="text-xs font-semibold px-3.5 py-2.5 rounded-xl bg-fuchsia-500/15 hover:bg-fuchsia-500/25 text-fuchsia-200 border border-fuchsia-400/30 transition">
+          About
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Interactive Workspace -->
+    <main class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-8">
+      <!-- Left: Input & Simple Settings (7 cols) -->
+      <section class="lg:col-span-7 space-y-6">
+        <div class="gradient-card rounded-2xl p-6">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-white/10">
+            <div class="flex items-center gap-3">
+              <span class="w-7 h-7 rounded-lg bg-gradient-to-br from-sky-400 to-indigo-500 text-base font-extrabold text-xs flex items-center justify-center shadow-sm">
+                1
+              </span>
+              <label for="rawInput" class="text-xl font-extrabold tracking-tight heading-pop">
+                Tell Us What You Need
+              </label>
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              <button type="button" data-sample="bug" class="sample-btn text-xs px-2.5 py-1.5 rounded-lg bg-base/80 hover:border-accentIndigo/70 text-slate-300 border border-borderSoft transition cursor-pointer">
+                Fix a Code Bug
+              </button>
+              <button type="button" data-sample="sql" class="sample-btn text-xs px-2.5 py-1.5 rounded-lg bg-base/80 hover:border-accentIndigo/70 text-slate-300 border border-borderSoft transition cursor-pointer">
+                Database Query
+              </button>
+              <button type="button" data-sample="summary" class="sample-btn text-xs px-2.5 py-1.5 rounded-lg bg-base/80 hover:border-accentIndigo/70 text-slate-300 border border-borderSoft transition cursor-pointer">
+                Summarize Notes
+              </button>
+            </div>
+          </div>
+
+          <textarea
+            id="rawInput"
+            rows="5"
+            placeholder="Just ramble naturally! Example: Hey, I need help explaining photosynthesis for my biology test tomorrow, keep it super simple and give me a quick way to remember it..."
+            class="w-full bg-base/90 text-slate-100 placeholder-slate-500 text-sm rounded-xl p-4 border border-borderSoft focus:outline-none focus:border-accentIndigo focus:ring-2 focus:ring-indigo-500/20 resize-y transition"
+          ></textarea>
+
+          <div class="flex items-center justify-between text-xs text-slate-400 mt-3">
+            <span>Your input: <strong id="rawWords" class="text-indigo-300 font-semibold">0</strong> words</span>
+            <button id="clearBtn" type="button" class="text-slate-400 hover:text-rose-300 font-medium transition cursor-pointer">
+              Clear Text
+            </button>
+          </div>
+        </div>
+
+        <!-- Output Settings -->
+        <div class="gradient-card rounded-2xl p-6 space-y-5">
+          <div class="flex items-center gap-3 pb-3 border-b border-white/10">
+            <span class="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-400 to-purple-500 text-base font-extrabold text-xs flex items-center justify-center shadow-sm">
+              2
+            </span>
+            <h2 class="text-xl font-extrabold tracking-tight heading-pop">
+              Choose How the AI Should Reply
+            </h2>
+          </div>
+
+          <div>
+            <span class="block text-xs font-medium text-slate-300 mb-2.5">Pick an Answer Style</span>
+            <div id="formatGroup" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <button type="button" data-format="Bullet Points" class="fmt-btn px-3 py-2.5 rounded-xl text-xs font-semibold border transition cursor-pointer">
+                Bullet Points
+              </button>
+              <button type="button" data-format="Code Only" class="fmt-btn px-3 py-2.5 rounded-xl text-xs font-semibold border transition cursor-pointer">
+                Code Only
+              </button>
+              <button type="button" data-format="Clean Data (JSON)" class="fmt-btn px-3 py-2.5 rounded-xl text-xs font-semibold border transition cursor-pointer">
+                Clean Data (JSON)
+              </button>
+              <button type="button" data-format="Simple Table" class="fmt-btn px-3 py-2.5 rounded-xl text-xs font-semibold border transition cursor-pointer">
+                Simple Table
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="bg-base/80 p-4 rounded-xl border border-borderSoft">
+              <div class="flex justify-between text-xs mb-2.5">
+                <span class="text-slate-300 font-medium">Max Reply Length</span>
+                <span class="text-sky-300 font-bold"><span id="wordCapLabel">120</span> words</span>
+              </div>
+              <input id="wordCapSlider" type="range" min="40" max="400" step="20" value="120" class="w-full accent-indigo-400 cursor-pointer" />
+              <div class="flex justify-between text-[11px] text-slate-500 mt-1.5">
+                <span>Short (40w)</span>
+                <span>Detailed (400w)</span>
+              </div>
+            </div>
+
+            <div class="bg-base/80 p-4 rounded-xl border border-borderSoft">
+              <label for="tierSelect" class="block text-xs text-slate-300 font-medium mb-2">
+                AI Depth Level
+              </label>
+              <select id="tierSelect" class="w-full bg-card text-xs text-slate-100 px-3 py-2 rounded-lg border border-borderSoft focus:outline-none focus:border-accentPurple cursor-pointer">
+                <option value="Quick & Simple">Quick &amp; Simple (Everyday use)</option>
+                <option value="Deep Thinking">Deep Thinking (Complex topics)</option>
+                <option value="Coding Helper">Coding Helper (Tech &amp; fixes)</option>
+              </select>
+              <p class="text-[11px] text-slate-400 mt-2">Sets how simple or detailed the prompt should be.</p>
+            </div>
+          </div>
+
+          <button
+            id="optimizeBtn"
+            type="button"
+            class="w-full py-3.5 px-5 rounded-xl font-bold text-sm bg-gradient-to-r from-sky-400 via-indigo-500 to-fuchsia-500 hover:brightness-110 text-white shadow-softGlow transition flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span id="btnLabel">Make My Prompt Sharp</span>
+            <span id="btnSpinner" class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Right: Ready-to-Use Output (5 cols) -->
+      <section class="lg:col-span-5">
+        <div class="gradient-card rounded-2xl p-6 flex flex-col h-full">
+          <div class="flex items-center justify-between gap-2 mb-4 pb-3 border-b border-white/10">
+            <div class="flex items-center gap-3">
+              <span class="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-400 to-rose-400 text-base font-extrabold text-xs flex items-center justify-center shadow-sm">
+                3
+              </span>
+              <h2 class="text-xl font-extrabold tracking-tight heading-pop">
+                Your Sharp Prompt
+              </h2>
+            </div>
+            <button
+              id="copyBtn"
+              type="button"
+              class="text-xs font-semibold px-3.5 py-1.5 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-200 border border-indigo-400/40 transition cursor-pointer"
+            >
+              Copy
+            </button>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2.5 mb-4">
+            <div class="bg-base/80 rounded-xl p-3 border border-borderSoft text-center">
+              <div class="text-[10px] uppercase tracking-wider text-slate-400">Prompt Size</div>
+              <div id="optWords" class="text-base font-bold text-sky-300 mt-0.5">—</div>
+            </div>
+            <div class="bg-base/80 rounded-xl p-3 border border-borderSoft text-center">
+              <div class="text-[10px] uppercase tracking-wider text-slate-400">Trimmed</div>
+              <div id="savingsBadge" class="text-base font-bold text-fuchsia-300 mt-0.5">—</div>
+            </div>
+            <div class="bg-base/80 rounded-xl p-3 border border-borderSoft text-center">
+              <div class="text-[10px] uppercase tracking-wider text-slate-400">Reply Limit</div>
+              <div id="capBadge" class="text-base font-bold text-indigo-300 mt-0.5">120w</div>
+            </div>
+          </div>
+
+          <pre
+            id="outputBox"
+            class="flex-1 min-h-[250px] bg-base/95 text-slate-100 font-mono text-xs leading-relaxed p-4 rounded-xl border border-borderSoft overflow-x-auto whitespace-pre-wrap"
+          >Your clean, ready-to-copy prompt will appear right here...</pre>
+
+          <p id="statusNote" class="text-xs text-slate-400 mt-3">
+            Clear rules stop AI from rambling and help you get the exact answer you want on the first try.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Ready-Made Ideas -->
+    <section id="preset-library" class="mt-8 gradient-card rounded-2xl p-6">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5 pb-4 border-b border-white/10">
+        <div>
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 rounded-lg bg-gradient-to-br from-sky-400 to-purple-500 text-base font-extrabold text-xs flex items-center justify-center shadow-sm">
+              4
+            </span>
+            <h2 class="text-xl md:text-2xl font-extrabold tracking-tight heading-pop">
+              Ready-Made Prompt Ideas
+            </h2>
+          </div>
+          <p class="text-xs text-slate-400 mt-1.5">
+            Not sure where to start? Click any idea below to load and sharpen it automatically.
+          </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input
+            id="presetSearch"
+            type="text"
+            placeholder="Search ideas (study, coding, plan)..."
+            class="bg-base/90 text-xs text-slate-100 placeholder-slate-500 px-3.5 py-2 rounded-xl border border-borderSoft focus:outline-none focus:border-accentIndigo w-full sm:w-56"
+          />
+          <div id="categoryTabs" class="flex flex-wrap gap-1.5">
+            <button type="button" data-cat="All" class="cat-btn text-xs px-3 py-1.5 rounded-xl border transition cursor-pointer">All</button>
+            <button type="button" data-cat="Coding" class="cat-btn text-xs px-3 py-1.5 rounded-xl border transition cursor-pointer">Coding</button>
+            <button type="button" data-cat="Study" class="cat-btn text-xs px-3 py-1.5 rounded-xl border transition cursor-pointer">Study</button>
+            <button type="button" data-cat="Planning" class="cat-btn text-xs px-3 py-1.5 rounded-xl border transition cursor-pointer">Planning</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="presetGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+
+    <!-- Shareable Prompt Card -->
+    <section id="card-export" class="mt-8 gradient-card rounded-2xl p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5 pb-4 border-b border-white/10">
+        <div>
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-400 to-rose-400 text-base font-extrabold text-xs flex items-center justify-center shadow-sm">
+              5
+            </span>
+            <h2 class="text-xl md:text-2xl font-extrabold tracking-tight heading-pop">
+              Save or Share Your Prompt
+            </h2>
+          </div>
+          <p class="text-xs text-slate-400 mt-1.5">
+            Download your prompt as an image card, copy it as clean text, or share a direct link with friends.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button id="downloadPngBtn" type="button" class="text-xs font-bold px-4 py-2 rounded-xl bg-gradient-to-r from-sky-400 to-indigo-500 text-white hover:brightness-110 transition cursor-pointer">
+            Download Image
+          </button>
+          <button id="copyMdCardBtn" type="button" class="text-xs font-semibold px-3.5 py-2 rounded-xl bg-base text-indigo-200 border border-indigo-400/40 hover:bg-indigo-500/15 transition cursor-pointer">
+            Copy Text
+          </button>
+          <button id="copyShareUrlBtn" type="button" class="text-xs font-semibold px-3.5 py-2 rounded-xl bg-base text-fuchsia-200 border border-fuchsia-400/40 hover:bg-fuchsia-500/15 transition cursor-pointer">
+            Copy Share Link
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+        <div class="lg:col-span-7">
+          <div
+            id="promptCardPreview"
+            class="rounded-2xl p-5 bg-gradient-to-br from-[#12162b] via-[#1b1736] to-[#261630] border border-indigo-400/30 shadow-softCard relative overflow-hidden"
+          >
+            <div class="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-white/10">
+              <span class="text-xs font-extrabold tracking-wider title-gradient">QUICKPROMPTS CARD</span>
+              <span id="cardMetaBadge" class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-200 border border-indigo-400/30">
+                Bullet Points · 120w
+              </span>
+            </div>
+            <pre id="cardPromptText" class="font-mono text-xs text-slate-100 whitespace-pre-wrap leading-relaxed min-h-[120px]">Create a prompt above to preview your shareable card here.</pre>
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-3 mt-3 border-t border-white/10 text-[11px] text-slate-400">
+              <span id="cardStatsLine">Size: — · Trimmed: —</span>
+              <span class="text-fuchsia-300 font-medium">Sharp AI Prompts, totally FREE</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 bg-base/80 rounded-2xl p-4 border border-borderSoft space-y-2.5">
+          <div class="text-xs font-bold text-slate-200">Image Preview</div>
+          <canvas id="exportCanvas" width="900" height="520" class="w-full rounded-xl border border-borderSoft bg-base"></canvas>
+          <p id="exportFeedback" class="text-[11px] text-sky-300 min-h-[16px]"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Prompts -->
+    <section class="mt-8 gradient-card rounded-2xl p-6">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+        <h2 class="text-xl font-extrabold tracking-tight heading-pop">Recent Prompts</h2>
+        <button id="clearHistoryBtn" type="button" class="text-xs text-slate-400 hover:text-rose-300 font-medium transition cursor-pointer">
+          Clear History
+        </button>
+      </div>
+      <div id="historyList" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-400">
+        <p class="italic">No prompts created yet.</p>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about-section" class="mt-8 gradient-card rounded-2xl p-6 md:p-7 relative overflow-hidden">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4 pb-3 border-b border-white/10">
+        <h2 class="text-2xl font-extrabold tracking-tight title-gradient">
+          About Quickprompts
+        </h2>
+        <span class="text-xs font-medium text-indigo-200 bg-indigo-500/15 px-3 py-1 rounded-full border border-indigo-400/30 w-fit">
+          Simple, Fast &amp; Free
+        </span>
+      </div>
+      <p class="text-sm text-slate-300 leading-relaxed mb-4">
+        Quickprompts turns everyday rambling into clear, well-structured instructions that any AI can follow easily. No fancy tech knowledge needed—just type what is on your mind, pick how you want the answer formatted, and copy a sharp prompt that saves you time.
+      </p>
+      <p class="text-base font-bold bg-gradient-to-r from-sky-300 via-indigo-300 to-fuchsia-300 bg-clip-text text-transparent pt-3 border-t border-white/10">
+        Made by a Group of Four 17 Year Olds to make your Work easier : )
+      </p>
+    </section>
+  </div>
+
+  <script>
+    const samples = {
+      bug: "Hi there! Hope you're doing well. I have a React useEffect hook that keeps firing over and over whenever my page updates and I'm not sure why or how to fix it cleanly. Could you please explain what's happening and show me how to fix it?",
+      sql: "Hey! Could you help me write a database query? I have a table called orders with user_id, total_amount, status, and created_at, and I want to find the top 5 highest spending customers in the last 30 days who finished their orders. Thanks so much!",
+      summary: "Please read and summarize the main points from these notes so I don't have to read every single paragraph. Highlight the biggest risks, main decisions, and what needs to happen next."
+    };
+
+    const presets = [
+      {
+        id: "password-check",
+        title: "Password Rule Checker",
+        category: "Coding",
+        format: "Clean Data (JSON)",
+        maxWords: 100,
+        tier: "Quick & Simple",
+        raw: "Could you please create a simple password check rule that requires an uppercase letter, a lowercase letter, a number, and a symbol, plus a few good and bad examples?"
+      },
+      {
+        id: "code-quick-fix",
+        title: "Clean Bug Fix",
+        category: "Coding",
+        format: "Code Only",
+        maxWords: 140,
+        tier: "Coding Helper",
+        raw: "Hey! My loading spinner sometimes gets stuck on screen if the internet drops while fetching data. Can you give me a clean fix without rewriting my whole file?"
+      },
+      {
+        id: "exam-explainer",
+        title: "Easy Exam Explainer",
+        category: "Study",
+        format: "Bullet Points",
+        maxWords: 120,
+        tier: "Quick & Simple",
+        raw: "Please explain how gravity works in super simple terms so I can remember it for my science test, including one everyday example and common mistakes to avoid."
+      },
+      {
+        id: "study-cheat-sheet",
+        title: "Quick Study Table",
+        category: "Study",
+        format: "Simple Table",
+        maxWords: 160,
+        tier: "Quick & Simple",
+        raw: "Can you turn these key terms and rules into a neat study table with Term, Simple Meaning, and Example so I can review fast before my quiz?"
+      },
+      {
+        id: "pros-cons-matrix",
+        title: "Pros & Cons Comparison",
+        category: "Planning",
+        format: "Simple Table",
+        maxWords: 150,
+        tier: "Deep Thinking",
+        raw: "I'm deciding between two or three ways to organize a group school project. Compare them by setup time, ease of use, and what could go wrong."
+      },
+      {
+        id: "project-checklist",
+        title: "Clear Project Checklist",
+        category: "Planning",
+        format: "Bullet Points",
+        maxWords: 110,
+        tier: "Quick & Simple",
+        raw: "Help me turn a rough project idea into a clear step-by-step checklist, potential problems to watch out for, and things we should skip for now."
+      }
+    ];
+
+    let selectedFormat = "Bullet Points";
+    let selectedCategory = "All";
+    let lastRawWords = 0;
+    let lastOptWords = 0;
+    let lastDeltaText = "—";
+    const historyItems = [];
+
+    const rawInput = document.getElementById("rawInput");
+    const rawWordsEl = document.getElementById("rawWords");
+    const optWordsEl = document.getElementById("optWords");
+    const savingsBadge = document.getElementById("savingsBadge");
+    const capBadge = document.getElementById("capBadge");
+    const outputBox = document.getElementById("outputBox");
+    const wordCapSlider = document.getElementById("wordCapSlider");
+    const wordCapLabel = document.getElementById("wordCapLabel");
+    const tierSelect = document.getElementById("tierSelect");
+    const modeSelect = document.getElementById("modeSelect");
+    const apiKeyInput = document.getElementById("apiKeyInput");
+    const optimizeBtn = document.getElementById("optimizeBtn");
+    const btnLabel = document.getElementById("btnLabel");
+    const btnSpinner = document.getElementById("btnSpinner");
+    const statusNote = document.getElementById("statusNote");
+    const presetGrid = document.getElementById("presetGrid");
+    const presetSearch = document.getElementById("presetSearch");
+    const exportCanvas = document.getElementById("exportCanvas");
+    const exportFeedback = document.getElementById("exportFeedback");
+
+    const countWords = (text) => {
+      const cleaned = text.trim();
+      return cleaned ? cleaned.split(/\s+/).length : 0;
+    };
+
+    function setActiveFormat(formatName) {
+      selectedFormat = formatName;
+      document.querySelectorAll(".fmt-btn").forEach((b) => {
+        const isMatch = b.dataset.format === formatName;
+        b.className = isMatch
+          ? "fmt-btn px-3 py-2.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-indigo-500/25 to-fuchsia-500/25 text-white border-indigo-400 border transition cursor-pointer"
+          : "fmt-btn px-3 py-2.5 rounded-xl text-xs font-semibold bg-base/80 text-slate-300 border-borderSoft hover:border-indigo-400/50 border transition cursor-pointer";
+      });
+      syncCardPreview();
+    }
+
+    rawInput.addEventListener("input", () => {
+      rawWordsEl.textContent = countWords(rawInput.value);
+    });
+
+    wordCapSlider.addEventListener("input", () => {
+      wordCapLabel.textContent = wordCapSlider.value;
+      capBadge.textContent = `${wordCapSlider.value}w`;
+      syncCardPreview();
+    });
+
+    tierSelect.addEventListener("change", syncCardPreview);
+
+    modeSelect.addEventListener("change", () => {
+      apiKeyInput.classList.toggle("hidden", modeSelect.value !== "gemini");
+    });
+
+    document.querySelectorAll(".sample-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        rawInput.value = samples[btn.dataset.sample];
+        rawInput.dispatchEvent(new Event("input"));
+      });
+    });
+
+    document.querySelectorAll(".fmt-btn").forEach((btn) => {
+      btn.addEventListener("click", () => setActiveFormat(btn.dataset.format));
+    });
+    setActiveFormat("Bullet Points");
+
+    document.getElementById("clearBtn").addEventListener("click", () => {
+      rawInput.value = "";
+      rawWordsEl.textContent = "0";
+      outputBox.textContent = "Your clean, ready-to-copy prompt will appear right here...";
+      optWordsEl.textContent = "—";
+      savingsBadge.textContent = "—";
+      lastRawWords = 0;
+      lastOptWords = 0;
+      lastDeltaText = "—";
+      syncCardPreview();
+    });
+
+    document.getElementById("copyBtn").addEventListener("click", async () => {
+      await navigator.clipboard.writeText(outputBox.textContent);
+      const copyBtn = document.getElementById("copyBtn");
+      copyBtn.textContent = "Copied!";
+      setTimeout(() => (copyBtn.textContent = "Copy"), 1400);
+    });
+
+    function setActiveCategory(cat) {
+      selectedCategory = cat;
+      document.querySelectorAll(".cat-btn").forEach((b) => {
+        const active = b.dataset.cat === cat;
+        b.className = active
+          ? "cat-btn text-xs px-3 py-1.5 rounded-xl font-semibold bg-indigo-500/25 text-white border-indigo-400 border transition cursor-pointer"
+          : "cat-btn text-xs px-3 py-1.5 rounded-xl bg-base/80 text-slate-300 border-borderSoft hover:border-indigo-400/50 border transition cursor-pointer";
+      });
+      renderPresets();
+    }
+
+    function renderPresets() {
+      const q = presetSearch.value.trim().toLowerCase();
+      const filtered = presets.filter((p) => {
+        const matchesCat = selectedCategory === "All" || p.category === selectedCategory;
+        const matchesQuery =
+          !q ||
+          p.title.toLowerCase().includes(q) ||
+          p.raw.toLowerCase().includes(q) ||
+          p.format.toLowerCase().includes(q);
+        return matchesCat && matchesQuery;
+      });
+
+      if (!filtered.length) {
+        presetGrid.innerHTML = `<p class="text-xs text-slate-400 italic col-span-full">No ideas match "${escapeHtml(q)}".</p>`;
+        return;
+      }
+
+      presetGrid.innerHTML = filtered
+        .map(
+          (p) => `
+          <div class="bg-base/80 border border-borderSoft hover:border-indigo-400/50 rounded-xl p-4 flex flex-col justify-between gap-3 transition">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-md bg-indigo-500/15 text-indigo-300 border border-indigo-400/30">
+                  ${escapeHtml(p.category)}
+                </span>
+                <span class="text-[11px] text-slate-400">${escapeHtml(p.format)} · ${p.maxWords}w</span>
+              </div>
+              <h3 class="text-sm font-bold text-white mb-1">${escapeHtml(p.title)}</h3>
+              <p class="text-xs text-slate-400 line-clamp-2">${escapeHtml(p.raw)}</p>
+            </div>
+            <button
+              type="button"
+              data-preset-id="${p.id}"
+              class="use-preset-btn w-full py-2 px-3 rounded-lg text-xs font-semibold bg-card hover:bg-indigo-500/20 text-indigo-200 border border-indigo-400/30 transition cursor-pointer"
+            >
+              Try This Idea
+            </button>
+          </div>
+        `
+        )
+        .join("");
+
+      document.querySelectorAll(".use-preset-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const preset = presets.find((item) => item.id === btn.dataset.presetId);
+          if (!preset) return;
+          rawInput.value = preset.raw;
+          rawInput.dispatchEvent(new Event("input"));
+          wordCapSlider.value = preset.maxWords;
+          wordCapSlider.dispatchEvent(new Event("input"));
+          tierSelect.value = preset.tier;
+          setActiveFormat(preset.format);
+          optimizeBtn.click();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      });
+    }
+
+    document.querySelectorAll(".cat-btn").forEach((btn) => {
+      btn.addEventListener("click", () => setActiveCategory(btn.dataset.cat));
+    });
+    presetSearch.addEventListener("input", renderPresets);
+    setActiveCategory("All");
+
+    function drawCardCanvas(promptText, metaText, statsText) {
+      const ctx = exportCanvas.getContext("2d");
+      const w = exportCanvas.width;
+      const h = exportCanvas.height;
+
+      const bgGrad = ctx.createLinearGradient(0, 0, w, h);
+      bgGrad.addColorStop(0, "#0d1021");
+      bgGrad.addColorStop(0.55, "#191736");
+      bgGrad.addColorStop(1, "#261633");
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, w, h);
+
+      const borderGrad = ctx.createLinearGradient(0, 0, w, h);
+      borderGrad.addColorStop(0, "#38bdf8");
+      borderGrad.addColorStop(0.5, "#818cf8");
+      borderGrad.addColorStop(1, "#e879f9");
+      ctx.strokeStyle = borderGrad;
+      ctx.lineWidth = 3;
+      ctx.strokeRect(18, 18, w - 36, h - 36);
+
+      ctx.fillStyle = "#e0e7ff";
+      ctx.font = "bold 24px sans-serif";
+      ctx.fillText("Quickprompts", 44, 62);
+
+      ctx.fillStyle = "#a5b4fc";
+      ctx.font = "15px sans-serif";
+      ctx.fillText(metaText.slice(0, 56), 44, 92);
+
+      ctx.fillStyle = "#f8fafc";
+      ctx.font = "17px monospace";
+      const lines = wrapCanvasLines(ctx, promptText, w - 88);
+      let y = 138;
+      for (const line of lines.slice(0, 13)) {
+        ctx.fillText(line, 44, y);
+        y += 25;
+      }
+
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "14px sans-serif";
+      ctx.fillText(statsText, 44, h - 56);
+
+      ctx.fillStyle = "#f0abfc";
+      ctx.font = "bold 15px sans-serif";
+      ctx.fillText("Made by a Group of Four 17 Year Olds to make your Work easier : )", 44, h - 30);
+    }
+
+    function wrapCanvasLines(ctx, text, maxWidth) {
+      const result = [];
+      for (const paragraph of text.split("\n")) {
+        const words = paragraph.split(/\s+/).filter(Boolean);
+        if (!words.length) {
+          result.push("");
+          continue;
+        }
+        let current = words[0];
+        for (let i = 1; i < words.length; i++) {
+          const test = `${current} ${words[i]}`;
+          if (ctx.measureText(test).width <= maxWidth) {
+            current = test;
+          } else {
+            result.push(current);
+            current = words[i];
+          }
+        }
+        result.push(current);
+      }
+      return result;
+    }
+
+    function syncCardPreview() {
+      const promptText = outputBox.textContent.trim();
+      const metaText = `${selectedFormat} · Max ${wordCapSlider.value} words · ${tierSelect.value}`;
+      const statsText = lastOptWords
+        ? `Before: ${lastRawWords} words → After: ${lastOptWords} words (${lastDeltaText})`
+        : "Size: — · Trimmed: —";
+
+      document.getElementById("cardMetaBadge").textContent = `${selectedFormat} · ${wordCapSlider.value}w`;
+      document.getElementById("cardPromptText").textContent = promptText;
+      document.getElementById("cardStatsLine").textContent = statsText;
+      drawCardCanvas(promptText, metaText, statsText);
+    }
+    syncCardPreview();
+
+    document.getElementById("downloadPngBtn").addEventListener("click", () => {
+      syncCardPreview();
+      const link = document.createElement("a");
+      link.download = "quickprompts-card.png";
+      link.href = exportCanvas.toDataURL("image/png");
+      link.click();
+      exportFeedback.textContent = "Downloaded quickprompts-card.png";
+    });
+
+    document.getElementById("copyMdCardBtn").addEventListener("click", async () => {
+      const md = [
+        `### Quickprompts (${selectedFormat}, Max ${wordCapSlider.value} words)`,
+        "```text",
+        outputBox.textContent.trim(),
+        "```",
+        `*Made by a Group of Four 17 Year Olds to make your Work easier : )*`
+      ].join("\n");
+      await navigator.clipboard.writeText(md);
+      exportFeedback.textContent = "Copied prompt text to clipboard.";
+    });
+
+    document.getElementById("copyShareUrlBtn").addEventListener("click", async () => {
+      const payload = btoa(
+        unescape(
+          encodeURIComponent(
+            JSON.stringify({
+              raw: rawInput.value.trim(),
+              format: selectedFormat,
+              maxWords: Number(wordCapSlider.value),
+              tier: tierSelect.value
+            })
+          )
+        )
+      );
+      const shareUrl = `${window.location.href.split("#")[0]}#p=${payload}`;
+      await navigator.clipboard.writeText(shareUrl);
+      exportFeedback.textContent = "Copied shareable link to clipboard.";
+    });
+
+    (function hydrateFromHash() {
+      const hash = window.location.hash;
+      if (!hash.startsWith("#p=")) return;
+      try {
+        const decoded = JSON.parse(decodeURIComponent(escape(atob(hash.slice(3)))));
+        if (decoded.raw) {
+          rawInput.value = decoded.raw;
+          rawInput.dispatchEvent(new Event("input"));
+        }
+        if (decoded.maxWords) {
+          wordCapSlider.value = decoded.maxWords;
+          wordCapSlider.dispatchEvent(new Event("input"));
+        }
+        if (decoded.tier) tierSelect.value = decoded.tier;
+        if (decoded.format) setActiveFormat(decoded.format);
+        if (decoded.raw) optimizeBtn.click();
+      } catch (_) {}
+    })();
+
+    function localCompressPrompt(raw, format, maxWords, tier) {
+      const fillerPatterns = [
+        /\b(hi|hello|hey there|hope you'?re doing well|sorry to bother you|please|could you maybe|i was wondering if you could|thanks so much|thank you)\b/gi,
+        /\b(basically|actually|kind of|sort of|in order to|due to the fact that|at the end of the day)\b/gi
+      ];
+      let cleaned = raw.trim();
+      for (const rx of fillerPatterns) cleaned = cleaned.replace(rx, " ");
+      cleaned = cleaned.replace(/\s+/g, " ").replace(/\s+([?.!,])/g, "$1").trim();
+
+      return [
+        `Task: ${cleaned}`,
+        `Depth: ${tier}`,
+        `Format: Reply using ${format}, keep it under ${maxWords} words, and skip unnecessary intro or outro fluff.`
+      ].join("\n");
+    }
+
+    async function optimizeWithGeminiDirect(raw, format, maxWords, tier, apiKey) {
+      const systemInstruction = `You turn messy user requests into clear, direct AI prompts. Keep the user's exact goal while removing filler words. Return ONLY the improved prompt with no extra commentary. Require the answer format "${format}" and a max length of ${maxWords} words.`;
+      const userPrompt = `Depth level: ${tier}\nUser request:\n${raw}`;
+
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${encodeURIComponent(apiKey)}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: systemInstruction }] },
+            contents: [{ parts: [{ text: userPrompt }] }]
+          })
+        }
+      );
+      if (!res.ok) throw new Error(`Gemini API error (${res.status})`);
+      const data = await res.json();
+      return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || localCompressPrompt(raw, format, maxWords, tier);
+    }
+
+    async function optimizeWithBackend(raw, format, maxWords, tier) {
+      const res = await fetch("/api/optimize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ raw, format, maxWords: Number(maxWords), tier })
+      });
+      if (!res.ok) throw new Error(`Server error (${res.status})`);
+      const data = await res.json();
+      return data.optimizedPrompt;
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+    }
+
+    function renderHistory(raw, optimized) {
+      historyItems.unshift({
+        raw,
+        optimized,
+        time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      });
+      const list = document.getElementById("historyList");
+      list.innerHTML = historyItems
+        .slice(0, 6)
+        .map(
+          (item) => `
+          <div class="bg-base/80 border border-borderSoft rounded-xl p-3.5 space-y-1.5">
+            <div class="flex justify-between text-[11px] text-slate-400">
+              <span class="truncate max-w-[75%]">${escapeHtml(item.raw)}</span>
+              <span class="text-indigo-300 font-medium">${item.time}</span>
+            </div>
+            <div class="font-mono text-[11px] text-slate-200 line-clamp-2">${escapeHtml(item.optimized)}</div>
+          </div>
+        `
+        )
+        .join("");
+    }
+
+    document.getElementById("clearHistoryBtn").addEventListener("click", () => {
+      historyItems.length = 0;
+      document.getElementById("historyList").innerHTML = '<p class="italic">No prompts created yet.</p>';
+    });
+
+    optimizeBtn.addEventListener("click", async () => {
+      const raw = rawInput.value.trim();
+      if (!raw) {
+        rawInput.focus();
+        return;
+      }
+
+      const maxWords = wordCapSlider.value;
+      const tier = tierSelect.value;
+      const mode = modeSelect.value;
+
+      btnLabel.textContent = "Sharpening...";
+      btnSpinner.classList.remove("hidden");
+      optimizeBtn.disabled = true;
+
+      try {
+        let result;
+        if (mode === "backend") {
+          result = await optimizeWithBackend(raw, selectedFormat, maxWords, tier);
+          statusNote.textContent = "Sharpened using Server AI Mode.";
+        } else if (mode === "gemini") {
+          const key = apiKeyInput.value.trim();
+          if (!key) throw new Error("Paste your Gemini API key or switch to Free Instant Mode.");
+          result = await optimizeWithGeminiDirect(raw, selectedFormat, maxWords, tier, key);
+          statusNote.textContent = "Sharpened using your Gemini API key.";
+        } else {
+          result = localCompressPrompt(raw, selectedFormat, maxWords, tier);
+          statusNote.textContent = "Sharpened instantly right in your browser—100% free.";
+        }
+
+        outputBox.textContent = result;
+        const rawW = countWords(raw);
+        const optW = countWords(result);
+        const diff = Math.round(((rawW - optW) / Math.max(1, rawW)) * 100);
+        const deltaFormatted = diff >= 0 ? `-${diff}%` : `+${Math.abs(diff)}%`;
+
+        lastRawWords = rawW;
+        lastOptWords = optW;
+        lastDeltaText = deltaFormatted;
+
+        rawWordsEl.textContent = rawW;
+        optWordsEl.textContent = `${optW}w`;
+        savingsBadge.textContent = deltaFormatted;
+        savingsBadge.className = `text-base font-bold mt-0.5 ${diff >= 0 ? "text-sky-300" : "text-fuchsia-300"}`;
+
+        syncCardPreview();
+        renderHistory(raw, result);
+      } catch (err) {
+        outputBox.textContent = `Oops: ${err.message}`;
+        statusNote.textContent = "Switch to Free Instant Mode if you don't have an API key set up.";
+        syncCardPreview();
+      } finally {
+        btnLabel.textContent = "Make My Prompt Sharp";
+        btnSpinner.classList.add("hidden");
+        optimizeBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
